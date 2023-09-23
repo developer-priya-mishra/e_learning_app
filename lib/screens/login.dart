@@ -2,6 +2,8 @@ import 'package:e_learning_app/constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'home.dart';
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -10,8 +12,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  PageController controller = PageController();
+  PageController pageController = PageController();
   int pageIndex = 0;
+  bool hidePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class _LoginState extends State<Login> {
       ),
       //Blue Outer box
       bottomSheet: Container(
-        height: 502.0,
+        height: 507.0,
         decoration: const BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -51,14 +54,10 @@ class _LoginState extends State<Login> {
                   Expanded(
                     child: TextButton(
                       onPressed: () {
-                        controller.animateToPage(
-                          0,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
+                        pageController.jumpToPage(0);
                       },
                       child: Text(
-                        "SIGNIN",
+                        "SIGN IN",
                         style: GoogleFonts.poppins(
                           color: pageIndex == 0 ? primaryColor : Colors.white,
                           fontSize: pageIndex == 0 ? 19.0 : 18.0,
@@ -73,11 +72,7 @@ class _LoginState extends State<Login> {
                   Expanded(
                     child: TextButton(
                       onPressed: () {
-                        controller.animateToPage(
-                          1,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
+                        pageController.jumpToPage(1);
                       },
                       child: Text(
                         "SIGN UP",
@@ -96,7 +91,8 @@ class _LoginState extends State<Login> {
             ),
             Expanded(
               child: PageView(
-                controller: controller,
+                controller: pageController,
+                physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (value) {
                   setState(() {
                     pageIndex = value;
@@ -163,7 +159,7 @@ class _LoginState extends State<Login> {
                         ),
                         //Password field
                         TextField(
-                          obscureText: true,
+                          obscureText: hidePassword,
                           obscuringCharacter: '*',
                           style: GoogleFonts.poppins(
                             fontSize: 18.0,
@@ -174,11 +170,26 @@ class _LoginState extends State<Login> {
                           keyboardType: TextInputType.visiblePassword,
                           decoration: InputDecoration(
                             isDense: true,
-                            suffixText: "Show",
-                            suffixStyle: GoogleFonts.poppins(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
+                            contentPadding: const EdgeInsets.all(0.0),
+                            suffix: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (hidePassword) {
+                                    hidePassword = false;
+                                  } else {
+                                    hidePassword = true;
+                                  }
+                                  hidePassword = !hidePassword;
+                                });
+                              },
+                              child: Text(
+                                hidePassword ? "Show" : "Hide",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                             enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(
@@ -210,7 +221,12 @@ class _LoginState extends State<Login> {
                         SizedBox(
                           height: 55.0,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                builder: (context) => const Home(),
+                              ));
+                            },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                 const Color(0xffE83547),
@@ -311,7 +327,7 @@ class _LoginState extends State<Login> {
                         ),
                         //Password field
                         TextField(
-                          obscureText: true,
+                          obscureText: hidePassword,
                           obscuringCharacter: '*',
                           style: GoogleFonts.poppins(
                             fontSize: 18.0,
@@ -322,11 +338,20 @@ class _LoginState extends State<Login> {
                           keyboardType: TextInputType.visiblePassword,
                           decoration: InputDecoration(
                             isDense: true,
-                            suffixText: "Show",
-                            suffixStyle: GoogleFonts.poppins(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
+                            suffix: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  hidePassword = !hidePassword;
+                                });
+                              },
+                              child: Text(
+                                hidePassword ? "Show" : "Hide",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                             enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(
